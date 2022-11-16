@@ -33,3 +33,6 @@ def workdir_view(request):
     # который возвращает список файлов в рабочей 
     # директории
     raise NotImplemented
+
+def new_view(reques):
+    pass
