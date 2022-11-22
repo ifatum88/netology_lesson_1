@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import copy
 
 DATA = {
     'omlet': {
@@ -19,12 +20,28 @@ DATA = {
     # можете добавить свои рецепты ;)
 }
 
-# Напишите ваш обработчик. Используйте DATA как источник данных
-# Результат - render(request, 'calculator/index.html', context)
-# В качестве контекста должен быть передан словарь с рецептом:
-# context = {
-#   'recipe': {
-#     'ингредиент1': количество1,
-#     'ингредиент2': количество2,
-#   }
-# }
+def index(request):
+    
+    recipes_list = DATA.keys()
+    
+    context = {
+        'recipes_list':recipes_list
+    }
+    
+    return render(request,'calculator\\index.html',context=context)
+
+def recipe(request,rec_name):
+    
+    servings_rec = copy.deepcopy(DATA.get(rec_name,""))
+    lf_not_zero = lambda x : float(x) if float(x) > 0 else 1
+    servings = lf_not_zero(request.GET.get('servings',1))
+    
+    for ingredient in servings_rec:
+        servings_rec[ingredient] = float(servings_rec[ingredient]) * servings
+         
+    context = {
+        'recipe':servings_rec,
+        'servings':servings
+    }
+    return render(request,'calculator\\recipe.html',context=context)
+
