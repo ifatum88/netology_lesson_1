@@ -2,44 +2,62 @@
 
 @baseUrl = http://localhost:8000/api
 
-# получение датчиков
+# получение датчиков - OK
 GET {{baseUrl}}/sensors/
 Content-Type: application/json
 
 ###
 
-# создание датчика
+# создание датчика - OK
 POST {{baseUrl}}/sensors/
 Content-Type: application/json
 
 {
-  "name": "ESP32",
+  "name": "ESP32_2",
   "description": "Датчик на кухне за холодильником"
 }
 
 ###
 
-# обновление датчика
-PATCH {{baseUrl}}/sensors/1/
+# обновление датчика - OK
+PATCH {{baseUrl}}/sensors/4/
 Content-Type: application/json
 
 {
-  "description": "Перенес датчик на балкон"
+  "description": "Перенес датчик на улицу__"
 }
 
 ###
 
-# добавление измерения
+# добавление измерения - OK
 POST {{baseUrl}}/measurements/
 Content-Type: application/json
 
 {
-  "sensor": 1,
-  "temperature": 22.3
+  "sensor": 5,
+  "temperature": 37.3
 }
 
 ###
 
-# получение информации по датчику
-GET {{baseUrl}}/sensors/1/
+# получение информации по датчику - OK
+GET {{baseUrl}}/sensors/4/
 Content-Type: application/json
+
+###
+
+# загрузка фото к измерению
+# НЕ РАБОТАЕТ. Тестировал через postman
+PATCH  {{baseUrl}}/measurements/4/
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="photo"; filename="img_2.jpg"
+Content-Type: image/jpeg
+
+< D:\img_2.jpg
+----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+
+
+  
