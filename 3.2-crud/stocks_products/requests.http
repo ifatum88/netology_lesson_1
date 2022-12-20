@@ -1,0 +1,127 @@
+@baseUrl = http://localhost:8000/api/v1
+
+# START: CRUD ПРОДУКТЫ
+
+# Получение списка - ОК
+GET {{baseUrl}}/products/?page=2
+Content-Type: application/json
+
+###
+
+# Получение экземпляра - ОК
+GET {{baseUrl}}/products/1/
+Content-Type: application/json
+
+### 
+
+# Создание экземляра - ОК
+POST {{baseUrl}}/products/
+Content-Type: application/json
+
+{
+    "title": "iPhone 25",
+    "description": "С антенной для телевизора"
+}
+
+###
+
+# Изменений экземпляра - OK
+PATCH {{baseUrl}}/products/5/
+Content-Type: application/json
+
+{
+    "title": "iPhone 25s"
+}
+
+###
+
+# Удаление экземпляра - OK
+DELETE  {{baseUrl}}/products/4/
+Content-Type: application/json
+
+###
+
+# END: CRUD ПРОДУКТЫ
+ 
+# START: CRUD СКЛАДЫ
+
+# Получение списка - ОК
+GET {{baseUrl}}/stocks/
+Content-Type: application/json
+
+###
+
+# Получение экземпляра - ОК
+GET {{baseUrl}}/stocks/5/
+Content-Type: application/json
+
+### 
+
+# Создание экземляра - ОК
+POST {{baseUrl}}/stocks/
+Content-Type: application/json
+
+{
+    "address": "Склад в США",
+    "positions": [
+        {
+        "product": 2,
+        "quantity": 250,
+        "price": 120.50
+        },
+        {
+        "product": 3,
+        "quantity": 100,
+        "price": 180
+        }
+    ]
+}
+
+###
+
+# Изменений экземпляра - OK
+PATCH {{baseUrl}}/stocks/6/
+Content-Type: application/json
+
+{
+    "address": "Склад в СШАААА",
+    "positions": [
+        {
+        "product": 2,
+        "quantity": 250,
+        "price": 120.50
+        },
+        {
+        "product": 3,
+        "quantity": 500,
+        "price": 182
+        }
+    ]
+}
+
+###
+
+# Удаление экземпляра - OK
+DELETE  {{baseUrl}}/stocks/6/
+Content-Type: application/json
+
+###
+
+# END: CRUD СКЛАДЫ
+
+
+# ПОИСК ПРОДУКТОВ
+GET {{baseUrl}}/products/?search=как
+Content-Type: application/json
+
+###
+
+# поиск складов, где есть определенный продукт
+GET {{baseUrl}}/stocks/?products=1
+Content-Type: application/json
+
+###
+
+# Доп. задание. Поиск складов по имени продукта
+GET {{baseUrl}}/stocks/?search=как
+Content-Type: application/json
