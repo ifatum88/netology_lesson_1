@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
+from django.conf import settings
+
 from rest_framework import serializers
 
-from advertisements.models import Advertisement
+from advertisements.models import Advertisement, AdvertisementStatusChoices
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,6 +26,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         model = Advertisement
         fields = ('id', 'title', 'description', 'creator',
                   'status', 'created_at', )
+        read_only_fields = ['creator']
 
     def create(self, validated_data):
         """Метод для создания"""
@@ -39,7 +42,13 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
+        
+        adv_count_for_user = Advertisement.objects.filter(creator=self.context["request"].user,
+                                                          status=AdvertisementStatusChoices.OPEN).count()
 
-        # TODO: добавьте требуемую валидацию
-
-        return data
+        if adv_count_for_user < settings.MAX_ADV_COUNT:
+            return data
+        else:
+            raise serializers.ValidationError("Max adv count = {}. Your OPEND adv count = {}".format( 
+                                              settings.MAX_ADV_COUNT,
+                                              adv_count_for_user))
