@@ -15,15 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
+# from rest_framework.routers import DefaultRouter
+
 from advertisements.views import main_page, AdvertisementViewSet
 
-from rest_framework.routers import DefaultRouter
-
-router = DefaultRouter()
-router.register('advertisements', AdvertisementViewSet)
-
+# Реализация маршрутов переехала в advertisements.views
 urlpatterns = [
     path('', main_page, name="main"),
-    path('api/', include(router.urls), name="api"),
+    path('api/', include('advertisements.urls'), name="api"),
     path('admin/', admin.site.urls, name="admin"),
 ]

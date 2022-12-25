@@ -1,13 +1,18 @@
 # примеры API-запросов
 
-# root Token = 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
+# root (superuser) Token = 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
 # manager Token = 95b85177d3b082744304ca07e270c846b95f3c55
 
 @baseUrl = http://127.0.0.1:8000/api
 
 # получение списка объявлений - OK
 GET {{baseUrl}}/advertisements/
-Content-Type: application/json
+
+###
+
+# получение списка объявлений - OK
+GET {{baseUrl}}/advertisements/
+Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
 
 ###
 
@@ -17,25 +22,14 @@ Content-Type: application/json
 
 ###
 
-# фильтр по статусу - ОК
-GET {{baseUrl}}/advertisements/?status=CLOSED
-Content-Type: application/json
-
-###
-
-# поиск - ОК
-GET {{baseUrl}}/advertisements/?search=Шкаф
-Content-Type: application/json
-
-###
-
 # создание объявления - OK
 POST {{baseUrl}}/advertisements/
 Content-Type: application/json
 Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
+# Authorization: Token 95b85177d3b082744304ca07e270c846b95f3c55
 
 {
-  "title": "Шкаф IKEA_4",
+  "title": "Ифон XXX",
   "description": "Срочно"
 }
 
@@ -49,7 +43,8 @@ Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
 ###
 
 # попытка поменять объявление от root - OK
-PATCH {{baseUrl}}/advertisements/1/
+# Меняем объявление, которое создал manager (доп задание)
+PATCH {{baseUrl}}/advertisements/13/
 Content-Type: application/json
 Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
 
@@ -60,7 +55,7 @@ Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
 ###
 
 # попытка поменять объявление от другого пользователя (manager) - OK
-PATCH {{baseUrl}}/advertisements/1/
+PATCH {{baseUrl}}/advertisements/13/
 Content-Type: application/json
 Authorization: Token 95b85177d3b082744304ca07e270c846b95f3c55
 
@@ -91,3 +86,62 @@ GET {{baseUrl}}/advertisements/?created_at_after=2022-12-20
 Content-Type: application/json
 
 ####
+
+# поиск - ОК
+GET {{baseUrl}}/advertisements/?search=Шкаф
+Content-Type: application/json
+
+###
+
+# ДОП. ЗАДАНИЕ - Избранное
+# Получить все мои объявления в избранном
+GET {{baseUrl}}/advertisements/favorits/
+Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
+
+####
+
+# Добавить избранное
+POST {{baseUrl}}/advertisements/13/favorits/
+Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
+Content-Type: application/json
+
+####
+
+# Удалить избранное
+DELETE {{baseUrl}}/advertisements/13/favorits/
+Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
+Content-Type: application/json
+
+###
+
+# ДОП. ЗАДАНИЕ - Статус DRAFT
+
+# Проверка под анонимом - не видно DRAFT
+GET {{baseUrl}}/advertisements/?status=DRAFT
+
+###
+
+# Проверка под админом (видно и свои и чужие DRAFT)
+GET {{baseUrl}}/advertisements/?status=DRAFT
+Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
+
+###
+
+# Получение списка объвлений под пользователем manager
+# Видит только свой DRAFT (id==11)
+GET {{baseUrl}}/advertisements/?status=DRAFT
+Authorization: Token 95b85177d3b082744304ca07e270c846b95f3c55
+
+###
+
+# Проверка под root. Попытка получить не свой DRAFT
+GET {{baseUrl}}/advertisements/11/
+Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
+
+###
+
+# Проверка под manager. Попытка получить не свой DRAFT
+GET {{baseUrl}}/advertisements/10/
+Authorization: Token 95b85177d3b082744304ca07e270c846b95f3c55
+
+
