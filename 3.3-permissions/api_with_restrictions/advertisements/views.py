@@ -28,11 +28,13 @@ class AdvertisementViewSet(ModelViewSet):
         serializer.save(creator=self.request.user)
     
     def get_permissions(self):
-        """Получение прав для действий."""
-        if self.action in ["create", "update", "partial_update"]:
-            return [IsAuthenticated(), IsOwner()]
-        return []
-
+        # Тут переписано через стандартный метод get_permissions()
+        # и добавлена проверка аутентицикации для NO SAFE методов
+        if self.action not in SAFE_METHODS:
+            self.permission_classes = [IsAuthenticated] + self.permission_classes 
+        
+        return super().get_permissions()
+    
     def get_queryset(self):
         """ Кастомная реализация фильтрации """
         
