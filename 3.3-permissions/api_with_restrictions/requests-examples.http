@@ -36,9 +36,10 @@ Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
 ###
 
 # Удаление объявления - OK
-DELETE {{baseUrl}}/advertisements/12/
+DELETE {{baseUrl}}/advertisements/14/
 Content-Type: application/json
 Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
+# Authorization: Token 95b85177d3b082744304ca07e270c846b95f3c55
 
 ###
 
@@ -49,7 +50,7 @@ Content-Type: application/json
 Authorization: Token 05a3deb8b1089a6021f1d4a8da9596e4a865c4f7
 
 {
-  "status": "CLOSED"
+  "status": "OPEN"
 }
 
 ###

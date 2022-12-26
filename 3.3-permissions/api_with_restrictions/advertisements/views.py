@@ -36,7 +36,7 @@ class AdvertisementViewSet(ModelViewSet):
     def get_permissions(self):
         # Тут переписано через стандартный метод get_permissions()
         # и добавлена проверка аутентицикации
-        if self.action in ['create', 'update', 'partial_update']:
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
             self.permission_classes = [IsAuthenticated] + self.permission_classes 
         
         return super().get_permissions()
