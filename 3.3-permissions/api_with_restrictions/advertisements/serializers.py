@@ -48,14 +48,21 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         # через методы ViewSet.
         # само поле при этом объявляется как `read_only=True`
         
-        creator = self.context["request"].user
-        validated_data["creator"] = creator
-        adv_count_for_user = Advertisement.objects.filter(creator=creator,
+        validated_data["creator"] = self.context["request"].user
+  
+        return super().create(validated_data)
+            
+    def validate(self, attrs):
+        
+        request = self.context.get("request")
+        status = attrs.get('status')
+        
+        adv_count_for_user = Advertisement.objects.filter(creator=request.user,
                                                           status=AdvertisementStatusChoices.OPEN).count()
 
-        if adv_count_for_user < settings.MAX_ADV_COUNT:
-            return super().create(validated_data)
-        else:
-            raise serializers.ValidationError("Max adv count = {}. Your OPEN adv count = {}".format( 
-                                              settings.MAX_ADV_COUNT,
-                                              adv_count_for_user))
+        if (adv_count_for_user >= settings.MAX_ADV_COUNT 
+                and status == 'OPEN'):
+            raise serializers.ValidationError(f"Max adv count = {settings.MAX_ADV_COUNT}. Your OPEN adv count = {adv_count_for_user}")
+            
+        return super().validate(attrs)
+        
